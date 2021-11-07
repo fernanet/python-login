@@ -1,0 +1,34 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Contas{% endblock %}
+
+{% block content %}
+<h2>{{ page }} Conta</h2>
+
+<div class="content-block">
+    <form action="" method="post" class="form responsive-width-100">
+        <label for="username">Nome de usuário</label>
+        <input type="text" id="username" name="username" placeholder="Nome de usuário" value="{{ account['usuario'] }}" required>
+        <label for="password">Senha</label>
+        <input type="text" id="password" name="password" placeholder="Senha" value="{{ account['senha'] }}" required>
+        <label for="email">E-mail</label>
+        <input type="text" id="email" name="email" placeholder="E-mail" value="{{ account['email'] }}" required>
+        <label for="activation_code">Código de Ativação</label>
+        <input type="text" id="activation_code" name="activation_code" placeholder="Código de Ativação" value="{{ account['cod_ativ'] }}">
+        <label for="rememberme">Lembrança do código</label>
+        <input type="text" id="rememberme" name="rememberme" placeholder="Lembrança do código" value="{{ account['lembranca'] }}">
+        <label for="role">Função</label>
+        <select id="role" name="role" style="margin-bottom: 30px;">
+            {% for role in roles %}
+            <option value="{{ role }}"{{ ' selected' if account['role'] == role else '' }}>{{ role }}</option>
+            {% endfor %}
+        </select>
+        <div class="submit-btns">
+            <input type="submit" name="submit" value="Enviar">
+            {% if page == 'Edit' %}
+            <input type="submit" name="delete" value="Excluir" class="delete">
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock %}

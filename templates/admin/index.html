@@ -1,0 +1,46 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Contas{% endblock %}
+
+{% block content %}
+<h2>Contas</h2>
+
+<div class="links">
+    <a href="{{ url_for('admin_account') }}">Criar Conta</a>
+</div>
+
+<div class="content-block">
+    <div class="table">
+        <table>
+            <thead>
+                <tr>
+                    <td>#</td>
+                    <td>Nome de usuário</td>
+                    <td class="responsive-hidden">Senha</td>
+                    <td class="responsive-hidden">E-mail</td>
+                    <td class="responsive-hidden">Código de Ativação</td>
+                    <td class="responsive-hidden">Função</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% if not accounts %}
+                <tr>
+                    <td colspan="8" style="text-align:center;">Não existem contas</td>
+                </tr>
+                {% else %}
+                {% for account in accounts %}
+                <tr class="details" onclick="location.href='{{ url_for('conta_admin', id=account['id']) }}'">
+                    <td>{{ account['id'] }}</td>
+                    <td>{{ account['usuario'] }}</td>
+                    <td class="responsive-hidden" style="word-break:break-all;">{{ account['senha'] }}</td>
+                    <td class="responsive-hidden">{{ account['email'] }}</td>
+                    <td class="responsive-hidden">{{ account['cod_ativ'] }}</td>
+                    <td class="responsive-hidden">{{ account['funcao'] }}</td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

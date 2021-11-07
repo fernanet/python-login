@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,minimum-scale=1">
+		<title>Recupere sua senha</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+	</head>
+	<body>
+		<div class="login">
+			<h1>Recupere sua senha</h1>
+			<form action="{{ url_for('recuperar') }}" method="post">
+                <label for="email">
+					<i class="fas fa-envelope"></i>
+				</label>
+				<input type="email" name="email" placeholder="Digite seu e-mail" id="email" required>
+				<div class="msg">{{ msg }}</div>
+				<input type="submit" value="Solicitar">
+			</form>
+		</div>
+	</body>
+</html>
