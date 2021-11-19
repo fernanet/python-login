@@ -8,8 +8,8 @@ $(document).ready(function() {
                 url: url,
                 data: form.serialize(),
                 success: function(data) {
-                    if (data == "Success") {
-                        window.location.href = "home";
+                    if (data == "Sucesso") {
+                        window.location.href = "inicio";
                     } else {
                         $(".msg").text(data);
                     }

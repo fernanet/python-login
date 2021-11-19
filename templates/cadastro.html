@@ -2,18 +2,21 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Cadastro de usuaŕio</title>
+		<meta name="viewport" content="width=device-width,minimum-scale=1">
+		<title>Cadastro</title>
 		<link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script src="{{ url_for('static', filename='script.js') }}"></script>
 	</head>
 	<body>
 		<div class="register">
 			<h1>Cadastro</h1>
 			<div class="links">
-				<a href="{{ url_for('login') }}">Entrar</a>
+				<a href="{{ url_for('entrar') }}">Entrar</a>
 				<a href="{{ url_for('cadastro') }}" class="active">Cadastro</a>
 			</div>
-			<form action="{{ url_for('cadastro') }}" method="post" autocomplete="off">
+			<form class="ajax-form" action="{{ url_for('cadastro') }}" method="post" autocomplete="off">
 				<label for="username">
 					<i class="fas fa-user"></i>
 				</label>
@@ -22,10 +25,14 @@
 					<i class="fas fa-lock"></i>
 				</label>
 				<input type="password" name="password" placeholder="Senha" id="password" required>
+				<label for="cpassword">
+					<i class="fas fa-lock"></i>
+				</label>
+				<input type="password" name="cpassword" placeholder="Redigite a senha" id="cpassword" required>
 				<label for="email">
 					<i class="fas fa-envelope"></i>
 				</label>
-				<input type="email" name="email" placeholder="Email" id="email" required>
+				<input type="email" name="email" placeholder="E-mail" id="email" required>
 				<div class="msg">{{ msg }}</div>
 				<input type="submit" value="Cadastrar">
 			</form>
