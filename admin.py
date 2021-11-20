@@ -1,11 +1,11 @@
 from main import app, mysql, MySQLdb, render_template, request, redirect, url_for, session, loggedin, hashlib, os
 
 # http://localhost:5000/admin/ - página inicial do administrador, visualiza todas as contas
-@app.route('/admin/', methods=['GET', 'POST'])
+@app.route('/admin', methods=['GET', 'POST'])
 def admin():
     # Verifica se o administrador está logado
     if not admin_loggedin():
-        return redirect(url_for('login'))
+        return redirect(url_for('entrar'))
     msg = ''
     # Recupera todas as contas do banco de dados
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -16,10 +16,10 @@ def admin():
 # http://localhost:5000/admin/conta - cria ou edita uma conta
 @app.route('/admin/conta/<int:id>', methods=['GET', 'POST'])
 @app.route('/admin/conta', methods=['GET', 'POST'], defaults={'id': None})
-def admin_account(id):
+def conta_admin(id):
     # Verifica se o administrador está logado
     if not admin_loggedin():
-        return redirect(url_for('login'))
+        return redirect(url_for('entrar'))
     page = 'Criar'
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     # Valores de conta de entrada padrão
@@ -28,7 +28,7 @@ def admin_account(id):
         'senha': '',
         'email': '',
         'cod_ativ': '',
-        'lembranca': '',
+        'rememberme': '',
         'funcao': 'Usuário'
     }
     roles = ['Usuário', 'Admin'];
@@ -46,7 +46,7 @@ def admin_account(id):
                  hash = request.form['password'] + app.secret_key
                  hash = hashlib.sha1(hash.encode())
                  password = hash.hexdigest();
-            cursor.execute('UPDATE contas SET usuario = %s, senha = %s, email = %s, cod_ativ = %s, lembranca = %s, funcao = %s WHERE id = %s', (request.form['username'],password,request.form['email'],request.form['activation_code'],request.form['rememberme'],request.form['role'],id,))
+            cursor.execute('UPDATE contas SET usuario = %s, senha = %s, email = %s, cod_ativ = %s, rememberme = %s, funcao = %s WHERE id = %s', (request.form['username'],password,request.form['email'],request.form['activation_code'],request.form['rememberme'],request.form['role'],id,))
             mysql.connection.commit()
             return redirect(url_for('admin'))
         if request.method == 'POST' and 'delete' in request.form:
@@ -59,7 +59,7 @@ def admin_account(id):
         hash = request.form['password'] + app.secret_key
         hash = hashlib.sha1(hash.encode())
         password = hash.hexdigest();
-        cursor.execute('INSERT INTO contas (usuario, senha , email, cod_ativ, lembranca, funcao) VALUES (%s,%s,%s,%s,%s,%s)', (request.form['username'],password,request.form['email'],request.form['activation_code'],request.form['rememberme'],request.form['role'],))
+        cursor.execute('INSERT INTO contas (usuario, senha , email, cod_ativ, rememberme, funcao) VALUES (%s,%s,%s,%s,%s,%s)', (request.form['username'],password,request.form['email'],request.form['activation_code'],request.form['rememberme'],request.form['role'],))
         mysql.connection.commit()
         return redirect(url_for('admin'))
     return render_template('admin/conta.html', account=account, page=page, roles=roles)
@@ -69,7 +69,7 @@ def admin_account(id):
 def admin_email():
     # Verifica se o administrador está logado
     if not admin_loggedin():
-        return redirect(url_for('login'))
+        return redirect(url_for('entrar'))
     # Obtém o caminho do diretório do modelo
     template_dir = os.path.join(os.path.dirname(__file__), 'templates')
     # Atualiza o arquivo de modelo ao salvar
@@ -82,7 +82,7 @@ def admin_email():
 
 # Função que verifica se o administrador está logado
 def admin_loggedin():
-    if loggedin() and session['funcao'] == 'Admin':
+    if loggedin() and session['role'] == 'Admin':
         # admin está logado
         return True
     # admin não está logado retorna falso

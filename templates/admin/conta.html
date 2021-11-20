@@ -16,7 +16,7 @@
         <label for="activation_code">Código de Ativação</label>
         <input type="text" id="activation_code" name="activation_code" placeholder="Código de Ativação" value="{{ account['cod_ativ'] }}">
         <label for="rememberme">Lembrança do código</label>
-        <input type="text" id="rememberme" name="rememberme" placeholder="Lembrança do código" value="{{ account['lembranca'] }}">
+        <input type="text" id="rememberme" name="rememberme" placeholder="Lembrança do código" value="{{ account['rememberme'] }}">
         <label for="role">Função</label>
         <select id="role" name="role" style="margin-bottom: 30px;">
             {% for role in roles %}
