@@ -28,7 +28,7 @@ def conta_admin(id):
         'senha': '',
         'email': '',
         'cod_ativ': '',
-        'rememberme': '',
+        'lembrarme': '',
         'funcao': 'Usuário'
     }
     roles = ['Usuário', 'Admin'];
@@ -46,7 +46,7 @@ def conta_admin(id):
                  hash = request.form['password'] + app.secret_key
                  hash = hashlib.sha1(hash.encode())
                  password = hash.hexdigest();
-            cursor.execute('UPDATE contas SET usuario = %s, senha = %s, email = %s, cod_ativ = %s, rememberme = %s, funcao = %s WHERE id = %s', (request.form['username'],password,request.form['email'],request.form['activation_code'],request.form['rememberme'],request.form['role'],id,))
+            cursor.execute('UPDATE contas SET usuario = %s, senha = %s, email = %s, cod_ativ = %s, lembrarme = %s, funcao = %s WHERE id = %s', (request.form['username'],password,request.form['email'],request.form['activation_code'],request.form['rememberme'],request.form['role'],id,))
             mysql.connection.commit()
             return redirect(url_for('admin'))
         if request.method == 'POST' and 'delete' in request.form:
@@ -59,7 +59,7 @@ def conta_admin(id):
         hash = request.form['password'] + app.secret_key
         hash = hashlib.sha1(hash.encode())
         password = hash.hexdigest();
-        cursor.execute('INSERT INTO contas (usuario, senha , email, cod_ativ, rememberme, funcao) VALUES (%s,%s,%s,%s,%s,%s)', (request.form['username'],password,request.form['email'],request.form['activation_code'],request.form['rememberme'],request.form['role'],))
+        cursor.execute('INSERT INTO contas (usuario, senha, email, cod_ativ, lembrarme, funcao) VALUES (%s,%s,%s,%s,%s,%s)', (request.form['username'],password,request.form['email'],request.form['activation_code'],request.form['rememberme'],request.form['role'],))
         mysql.connection.commit()
         return redirect(url_for('admin'))
     return render_template('admin/conta.html', account=account, page=page, roles=roles)

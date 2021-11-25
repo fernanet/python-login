@@ -14,7 +14,7 @@ app.config['threaded'] = True
 # Insira seus detalhes de conexão de banco de dados abaixo
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'fernando'
-app.config['MYSQL_PASSWORD'] = 'r!p2Pjedka'
+app.config['MYSQL_PASSWORD'] = 'kBm9D#j@5p'
 app.config['MYSQL_DB'] = 'ciscorp_db'
 
 # Insira os detalhes do seu servidor de e-mail abaixo
@@ -84,7 +84,7 @@ def entrar():
         resp = make_response('Sucesso', 200)
         resp.set_cookie('rememberme', hash, expires=expire_date)
 		# Atualiza o lembrete na tabela de contas para o hash do cookie
-        cursor.execute('UPDATE contas SET rememberme = %s WHERE id = %s', (hash, account['id'],))
+        cursor.execute('UPDATE contas SET lembrarme = %s WHERE id = %s', (hash, account['id'],))
         mysql.connection.commit()
         return resp
       return 'Sucesso'
@@ -269,7 +269,7 @@ def recuperar():
 			# Gera ID único
 			reset_code = uuid.uuid4()
 			# Atualiza a coluna de redefinição na tabela de contas para refletir o ID gerado
-			cursor.execute('UPDATE contas SET reset = %s WHERE email = %s', (reset_code, email,))
+			cursor.execute('UPDATE contas SET redefinir = %s WHERE email = %s', (reset_code, email,))
 			mysql.connection.commit()
 			# Altera seu_email@gmail.com
 			email_info = Message('Redefinição de senha', sender = app.config['MAIL_USERNAME'], recipients = [email])
@@ -290,7 +290,7 @@ def redefinir(email, code):
 	msg = ''
 	cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 	# Recupera a conta com o e-mail e o código de redefinição fornecido na solicitação GET
-	cursor.execute('SELECT * FROM contas WHERE email = %s AND reset = %s', (email, code,))
+	cursor.execute('SELECT * FROM contas WHERE email = %s AND redefinir = %s', (email, code,))
 	account = cursor.fetchone()
 	# Se a conta existe
 	if account:
@@ -305,7 +305,7 @@ def redefinir(email, code):
 				hash = hashlib.sha1(hash.encode())
 				npassword = hash.hexdigest();
 				# Atualiza a senha do usuário
-				cursor.execute('UPDATE contas SET senha = %s, reset = "" WHERE email = %s', (npassword, email,))
+				cursor.execute('UPDATE contas SET senha = %s, redefinir = "" WHERE email = %s', (npassword, email,))
 				mysql.connection.commit()
 				msg = 'Sua senha foi redefinida, agora você pode <a href="' + url_for('entrar') + '">efetuar login</a>!'
 			else:
@@ -327,14 +327,14 @@ def logout():
    resp.set_cookie('rememberme', expires=0)
    return resp
 
-# Verifica se a função está logada, atualiza a sessão se o cookie para "lembrar de mim" existir
+# Verifica se a função está logada, atualiza a sessão se o cookie para "lembrar-me" existir
 def loggedin():
 	if 'loggedin' in session:
 		return True
 	elif 'rememberme' in request.cookies:
 		cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 		# verifique se está lembrado, o cookie deve corresponder ao campo "lembrar-me"
-		cursor.execute('SELECT * FROM contas WHERE rememberme = %s', (request.cookies['rememberme'],))
+		cursor.execute('SELECT * FROM contas WHERE lembrarme = %s', (request.cookies['rememberme'],))
 		account = cursor.fetchone()
 		if account:
 			# atualiza variáveis de sessão
